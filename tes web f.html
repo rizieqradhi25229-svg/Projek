@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Olimpiade Sains - Universitas Pattimura</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient( 135deg,#89a5c4 0%,#a9bfd3 45%,#c3d8df 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Container utama yang membungkus semua halaman (simulasi routing sederhana) */
+        .app-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ----- Kartu & elemen umum ----- */
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(0px);
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            background-color: #f0f2f5;
+            color: #1e2a3e;
+        }
+
+        .btn-primary {
+            background: #0b3b5f;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 32, 64, 0.1);
+        }
+
+        .btn-primary:hover {
+            background: #0f4c75;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        /* ---------- LAYOUT LOGIN (dua panel) ---------- */
+        .login-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        .login-card {
+            flex: 1;
+            min-width: 280px;
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem 1.8rem;
+            text-align: center;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s;
+        }
+
+        .login-card h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 1rem 0 0.5rem;
+            color: #0b3b5f;
+        }
+
+        .badge-icon {
+            background: #eef2ff;
+            width: 70px;
+            height: 70px;
+            line-height: 70px;
+            border-radius: 50%;
+            margin: 0 auto;
+            font-size: 2.2rem;
+            color: #0b3b5f;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            margin: 0.7rem 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.5rem;
+            font-size: 0.95rem;
+            background: #fafcff;
+            transition: 0.2s;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #0f4c75;
+            box-shadow: 0 0 0 3px rgba(15, 76, 117, 0.2);
+        }
+
+        /* Dashboard Admin */
+        .dashboard-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-area h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0b3b5f;
+        }
+
+        .logo-area p {
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.3rem;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #0b3b5f;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #4a627a;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 1rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #eef2f8;
+        }
+
+        th {
+            background-color: #f8fafd;
+            font-weight: 700;
+            color: #1f3a4b;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.9rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-verified {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-waiting {
+            background: #fed7aa;
+            color: #9b4a00;
+        }
+
+        .action-icons i {
+            font-size: 1.1rem;
+            margin: 0 0.3rem;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .fa-check-circle {
+            color: #10b981;
+        }
+        .fa-trash-alt {
+            color: #ef4444;
+        }
+        .fa-edit {
+            color: #3b82f6;
+        }
+
+        .search-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }
+        .search-bar input {
+            padding: 0.6rem 1rem;
+            border-radius: 2rem;
+            border: 1px solid #cbd5e6;
+            width: 250px;
+        }
+
+        /* responsif */
+        @media (max-width: 700px) {
+            body {
+                padding: 1rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .logout-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+        .fakta-unpatti {
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            margin-top: 0.5rem;
+        }
+        i {
+            pointer-events: auto;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo-area h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0b3b5f;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.4rem;
+            color: #1e2a3e;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+        }
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #fafcff;
+        }
+        .upload-area:hover {
+            background: #f1f5f9;
+            border-color: #0f4c75;
+        }
+        .file-info {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #4a627a;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        @media (max-width: 700px) {
+            body { padding: 1rem; }
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eef2f8;
+        }
+        .action-icons i {
+            font-size: 1.1rem;
+            margin: 0 0.3rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container" id="appRoot">
+    <!-- Halaman Login (2 role: ADMIN & PESERTA) -->
+    <div id="loginPage">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: center; gap: 15px; align-items: baseline;">
+                <span style="font-weight:800; font-size:2rem; color:#0b3b5f;">OLIMPIADE SAINS</span>
+            </div>
+            <p style="color:#2c5282;">Universitas Pattimura · Fakultas Sains dan Teknologi</p>
+        </div>
+        <div class="login-grid">
+            <!-- Admin Masuk -->
+            <div class="login-card">
+                <div class="badge-icon"><i class="fas fa-user-shield"></i></div>
+                <h2>ADMIN</h2>
+                <p style="margin-bottom: 1rem; font-size: 0.85rem;">Akses panel manajemen</p>
+                <div class="login-form">
+                    <input type="text" id="adminUsername" placeholder="User" value="admin">
+                    <input type="password" id="adminPassword" placeholder="kata Sandi" value="admin123">
+                    <button class="btn btn-primary" id="adminLoginBtn" style="width:100%; margin-top: 1rem;"><i class="fas fa-sign-in-alt"></i> Masuk</button>
+                </div>
+            </div>
+            <!-- Peserta Masuk -->
+            <div class="login-card">
+                <div class="badge-icon"><i class="fas fa-user-graduate"></i></div>
+                <h2>PESERTA</h2>
+                <p style="margin-bottom: 1rem; font-size: 0.85rem;">Lihat status pendaftaran</p>
+                <div class="login-form">
+                    <input type="text" id="pesertaEmail" placeholder="Email Peserta" value="siti@sch.id">
+                    <button class="btn btn-primary" id="pesertaLoginBtn" style="width:100%; margin-top: 1rem;"><i class="fas fa-eye"></i> Masuk</button>
+                </div>
+                <div class="fakta-unpatti"><i class="fas fa-info-circle"></i> Demo: gunakan email terdaftar (contoh: siti@sch.id)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD ADMIN (default hidden) -->
+    <div id="adminDashboard" class="hidden">
+        <div class="dashboard-header">
+            <div class="logo-area">
+                <h1><i class="fas fa-flask"></i> FST · Universitas Pattimura</h1>
+                <p>Olimpiade Sains | Panel Administrator</p>
+            </div>
+            <button class="logout-btn" id="adminLogoutBtn"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+        </div>
+
+        <!-- Statistik -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalPendaftar">0</div>
+                <div class="stat-label"><i class="fas fa-users"></i> Jumlah Pendaftar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="verifiedCount">0</div>
+                <div class="stat-label"><i class="fas fa-check-circle"></i> Sudah di Verifikasi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="waitingCount">0</div>
+                <div class="stat-label"><i class="fas fa-clock"></i> Menunggu Verifikasi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><i class="fas fa-user-cog"></i> 1</div>
+                <div class="stat-label">User Admin</div>
+            </div>
+        </div>
+
+        <!-- Daftar Peserta + fitur edit / verifikasi -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin: 1rem 0 0.5rem;">
+            <h3><i class="fas fa-table-list"></i> DAFTAR PESERTA</h3>
+            <button id="tambahPesertaBtn" class="btn btn-primary" style="background:#2c7da0;"><i class="fas fa-plus"></i> Tambah Peserta</button>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchPeserta" placeholder="Cari nama / email / sekolah..." class="search-input">
+        </div>
+        <div class="table-container">
+            <table id="pesertaTable">
+                <thead>
+                    <tr><th>Nama Lengkap</th><th>Email</th><th>Sekolah</th><th>Status</th><th>Edit</th></tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data dinamis dari JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH/EDIT PESERTA -->
+    <div id="modalPeserta" style="display:none; position:fixed; top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:1000;">
+        <div style="background:white; max-width:450px; width:90%; border-radius:2rem; padding:2rem; position:relative;">
+            <h3 id="modalTitle">Tambah Peserta</h3>
+            <input type="text" id="modalNama" placeholder="Nama Lengkap" style="width:100%; margin:0.5rem 0; padding:0.7rem; border-radius:1rem; border:1px solid #ccc;">
+            <input type="email" id="modalEmail" placeholder="Email" style="width:100%; margin:0.5rem 0; padding:0.7rem; border-radius:1rem; border:1px solid #ccc;">
+            <input type="text" id="modalSekolah" placeholder="Asal Sekolah" style="width:100%; margin:0.5rem 0; padding:0.7rem; border-radius:1rem; border:1px solid #ccc;">
+            <select id="modalStatus" style="width:100%; margin:0.5rem 0; padding:0.7rem; border-radius:1rem;">
+                <option value="Menunggu">Menunggu Verifikasi</option>
+                <option value="Terverifikasi">Sudah di Verifikasi</option>
+            </select>
+            <div style="display:flex; gap:1rem; margin-top:1rem; justify-content:flex-end;">
+                <button id="modalCancel" class="btn btn-outline">Batal</button>
+                <button id="modalSave" class="btn btn-primary">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN PESERTA (View hanya melihat status) -->
+    
+
+<!-- DASHBOARD PESERTA (dengan Formulir & Upload) -->
+    <div id="pesertaDashboard" class="hidden">
+        <div class="dashboard-header">
+            <div><h1><i class="fas fa-medal"></i> Dashboard Peserta</h1><p>Olimpiade Sains UNPATTI</p></div>
+            <button class="logout-btn" id="pesertaLogoutBtn"><i class="fas fa-arrow-left"></i> Kembali</button>
+        </div>
+
+        <!-- Status Pendaftar -->
+        <div class="card" style="padding:1rem 2rem; margin-bottom:2rem; background: #e6f7ec; text-align:center;">
+            <h3><i class="fas fa-clipboard-list"></i> Status Pendaftar</h3>
+            <p id="statusMessage" style="font-weight:bold; font-size:1.1rem;">Lengkap! Semua Data Upload Bukti Pembayaran</p>
+        </div>
+
+        <div class="grid-2">
+            <!-- FORMULIR PENDAFTARAN -->
+            <div class="card" style="padding:1.5rem;">
+                <h3><i class="fas fa-edit"></i> Formulir Pendaftaran</h3>
+                <div class="form-group"><label>Nama Lengkap</label><input type="text" id="formNama" placeholder="Nama Lengkap"></div>
+                <div class="form-group"><label>Asal Sekolah</label><input type="text" id="formSekolah" placeholder="Asal Sekolah"></div>
+                <div class="form-group"><label>Nomor HP</label><input type="tel" id="formHp" placeholder="Nomor HP"></div>
+                <div class="form-group"><label>Alamat Lengkap</label><textarea id="formAlamat" rows="2" placeholder="Alamat Lengkap"></textarea></div>
+                <div class="form-group"><label>Email</label><input type="email" id="formEmail" placeholder="Email" readonly style="background:#f0f2f5;"></div>
+                <button id="simpanFormBtn" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Perubahan</button>
+            </div>
+
+            <!-- BUKTI PEMBAYARAN -->
+            <div class="card" style="padding:1.5rem;">
+                <h3><i class="fas fa-receipt"></i> Bukti Pembayaran</h3>
+                <div id="uploadArea" class="upload-area">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color:#0b3b5f;"></i>
+                    <p>Klik Untuk Upload</p>
+                    <small>Format JPG, PNG, PDF (max 2MB)</small>
+                    <input type="file" id="fileUpload" accept="image/*,application/pdf" style="display:none;">
+                </div>
+                <div id="fileInfo" class="file-info"></div>
+                <button id="uploadBtn" class="btn btn-success" style="margin-top:1rem; width:100%;"><i class="fas fa-upload"></i> Upload Bukti</button>
+                <div id="buktiStatus" style="margin-top:1rem; font-size:0.85rem; text-align:center;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Data peserta awal sesuai mockup dan contoh data
+    let pesertaData = [
+        { id: 1, nama: "Budi Santoso", email: "budi@sch.id", sekolah: "SMA Negeri 1 Ambon", status: "Terverifikasi" },
+        { id: 2, nama: "Siti Aisyah", email: "siti@sch.id", sekolah: "SMA Katolik St. Fransiskus", status: "Menunggu" },
+        { id: 3, nama: "Ahmad Rizki", email: "ahmad@ma.id", sekolah: "MAN 2 Model", status: "Menunggu" },
+        { id: 4, nama: "Clara Malakian", email: "clara@sch.id", sekolah: "SMA Negeri 5 Ambon", status: "Terverifikasi" }
+    ];
+    let nextId = 5;
+
+    // --- Helper functions ---
+    function updateStats() {
+        const total = pesertaData.length;
+        const verified = pesertaData.filter(p => p.status === "Terverifikasi").length;
+        const waiting = pesertaData.filter(p => p.status === "Menunggu").length;
+        document.getElementById('totalPendaftar').innerText = total;
+        document.getElementById('verifiedCount').innerText = verified;
+        document.getElementById('waitingCount').innerText = waiting;
+    }
+
+    function renderTabelPeserta(filterText = "") {
+        const tbody = document.getElementById('tableBody');
+        if(!tbody) return;
+        let filtered = [...pesertaData];
+        if(filterText.trim() !== "") {
+            const lowerFilter = filterText.toLowerCase();
+            filtered = pesertaData.filter(p => 
+                p.nama.toLowerCase().includes(lowerFilter) ||
+                p.email.toLowerCase().includes(lowerFilter) ||
+                p.sekolah.toLowerCase().includes(lowerFilter)
+            );
+        }
+        if(filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Tidak ada peserta</td></tr>`;
+            return;
+        }
+        tbody.innerHTML = filtered.map(p => `
+            <tr>
+                <td>${escapeHtml(p.nama)}</td>
+                <td>${escapeHtml(p.email)}</td>
+                <td>${escapeHtml(p.sekolah)}</td>
+                <td><span class="status-badge ${p.status === 'Terverifikasi' ? 'status-verified' : 'status-waiting'}">${p.status === 'Terverifikasi' ? '✔ Terverifikasi' : '⏳ Menunggu'}</span></td>
+                <td class="action-icons">
+                    <i class="fas fa-check-circle" title="Verifikasi" onclick="ubahStatus('${p.id}', 'Terverifikasi')"></i>
+                    <i class="fas fa-edit" title="Edit" onclick="editPeserta('${p.id}')"></i>
+                    <i class="fas fa-trash-alt" title="Hapus" onclick="hapusPeserta('${p.id}')"></i>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // Global functions for inline actions
+    window.ubahStatus = function(id, newStatus) {
+        const p = pesertaData.find(p => p.id == id);
+        if(p) {
+            p.status = newStatus;
+            updateStats();
+            renderTabelPeserta(document.getElementById('searchPeserta')?.value || "");
+        }
+    };
+    window.editPeserta = function(id) {
+        const p = pesertaData.find(p => p.id == id);
+        if(p) {
+            currentEditId = p.id;
+            document.getElementById('modalTitle').innerText = "Edit Peserta";
+            document.getElementById('modalNama').value = p.nama;
+            document.getElementById('modalEmail').value = p.email;
+            document.getElementById('modalSekolah').value = p.sekolah;
+            document.getElementById('modalStatus').value = p.status;
+            document.getElementById('modalPeserta').style.display = "flex";
+        }
+    };
+    window.hapusPeserta = function(id) {
+        if(confirm("Yakin hapus peserta?")) {
+            pesertaData = pesertaData.filter(p => p.id != id);
+            updateStats();
+            renderTabelPeserta(document.getElementById('searchPeserta')?.value || "");
+        }
+    };
+
+    let currentEditId = null;
+
+    function simpanPesertaFromModal() {
+        const nama = document.getElementById('modalNama').value.trim();
+        const email = document.getElementById('modalEmail').value.trim();
+        const sekolah = document.getElementById('modalSekolah').value.trim();
+        const status = document.getElementById('modalStatus').value;
+        if(!nama || !email || !sekolah) {
+            alert("Harap lengkapi data!");
+            return;
+        }
+        if(currentEditId === null) {
+            // Tambah baru
+            const newId = nextId++;
+            pesertaData.push({ id: newId, nama, email, sekolah, status });
+        } else {
+            // Edit
+            const idx = pesertaData.findIndex(p => p.id === currentEditId);
+            if(idx !== -1) {
+                pesertaData[idx] = { ...pesertaData[idx], nama, email, sekolah, status };
+            }
+        }
+        closeModal();
+        updateStats();
+        const searchVal = document.getElementById('searchPeserta')?.value || "";
+        renderTabelPeserta(searchVal);
+    }
+
+    function closeModal() {
+        document.getElementById('modalPeserta').style.display = "none";
+        currentEditId = null;
+        document.getElementById('modalNama').value = "";
+        document.getElementById('modalEmail').value = "";
+        document.getElementById('modalSekolah').value = "";
+        document.getElementById('modalStatus').value = "Menunggu";
+    }
+
+    // Routing sederhana / UI state
+    function showAdminDashboard() {
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('adminDashboard').classList.remove('hidden');
+        document.getElementById('pesertaDashboard').classList.add('hidden');
+        updateStats();
+        renderTabelPeserta("");
+        // reset search
+        const searchInput = document.getElementById('searchPeserta');
+        if(searchInput) searchInput.value = "";
+    }
+
+    function showPesertaDashboard(emailPeserta) {
+        const peserta = pesertaData.find(p => p.email === emailPeserta);
+        if(!peserta) {
+            alert("Email tidak ditemukan dalam daftar peserta. Silakan hubungi admin.");
+            return false;
+        }
+        document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('adminDashboard').classList.add('hidden');
+        document.getElementById('pesertaDashboard').classList.remove('hidden');
+        document.getElementById('pesertaNamaDisplay').innerText = peserta.nama;
+        document.getElementById('pesertaEmailDisplay').innerText = peserta.email;
+        document.getElementById('pesertaSekolahDisplay').innerHTML = `<i class="fas fa-school"></i> ${peserta.sekolah}`;
+        const badgeSpan = document.getElementById('pesertaStatusBadge');
+        if(peserta.status === "Terverifikasi") {
+            badgeSpan.innerText = "✔ Terverifikasi";
+            badgeSpan.className = "status-badge status-verified";
+        } else {
+            badgeSpan.innerText = "⏳ Menunggu Verifikasi";
+            badgeSpan.className = "status-badge status-waiting";
+        }
+        return true;
+    }
+
+    // Login handlers
+    document.getElementById('adminLoginBtn').addEventListener('click', () => {
+        const user = document.getElementById('adminUsername').value;
+        const pass = document.getElementById('adminPassword').value;
+        if(user === "admin" && pass === "admin123") {
+            showAdminDashboard();
+        } else {
+            alert("User atau kata sandi salah! (gunakan admin/admin123)");
+        }
+    });
+    document.getElementById('pesertaLoginBtn').addEventListener('click', () => {
+        const email = document.getElementById('pesertaEmail').value.trim();
+        if(email === "") {
+            alert("Masukkan email peserta.");
+            return;
+        }
+        const found = pesertaData.some(p => p.email === email);
+        if(!found) {
+            alert(`Email ${email} tidak terdaftar. Silakan daftar via admin. (Contoh: siti@sch.id)`);
+            return;
+        }
+        showPesertaDashboard(email);
+    });
+    document.getElementById('adminLogoutBtn').addEventListener('click', () => {
+        document.getElementById('adminDashboard').classList.add('hidden');
+        document.getElementById('loginPage').classList.remove('hidden');
+    });
+    document.getElementById('pesertaLogoutBtn').addEventListener('click', () => {
+        document.getElementById('pesertaDashboard').classList.add('hidden');
+        document.getElementById('loginPage').classList.remove('hidden');
+        document.getElementById('pesertaEmail').value = "";
+    });
+    document.getElementById('tambahPesertaBtn')?.addEventListener('click', () => {
+        currentEditId = null;
+        document.getElementById('modalTitle').innerText = "Tambah Peserta";
+        document.getElementById('modalNama').value = "";
+        document.getElementById('modalEmail').value = "";
+        document.getElementById('modalSekolah').value = "";
+        document.getElementById('modalStatus').value = "Menunggu";
+        document.getElementById('modalPeserta').style.display = "flex";
+    });
+    document.getElementById('modalCancel')?.addEventListener('click', closeModal);
+    document.getElementById('modalSave')?.addEventListener('click', simpanPesertaFromModal);
+    document.getElementById('searchPeserta')?.addEventListener('input', (e) => {
+        renderTabelPeserta(e.target.value);
+    });
+    // klik diluar modal (opsional)
+    window.onclick = function(event) {
+        const modal = document.getElementById('modalPeserta');
+        if(event.target === modal) closeModal();
+    };
+    // Inisialisasi awal: render data statis
+    updateStats();
+    // Jika ingin interface langsung login, tampilkan halaman login, hidden dashboard dll
+    document.getElementById('adminDashboard').classList.add('hidden');
+    document.getElementById('pesertaDashboard').classList.add('hidden');
+    document.getElementById('loginPage').classList.remove('hidden');
+    // Default populate data for demo context
+    renderTabelPeserta("");
+</script>
+</body>
+</html>
